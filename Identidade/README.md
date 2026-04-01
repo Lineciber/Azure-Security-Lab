@@ -1,165 +1,190 @@
 # 🆔 Gestão de Identidade e Acesso (IAM)
 
-> "A Identidade é o novo perímetro de segurança." 🛡️
-> Nesta seção, documento a implementação de controles no **Microsoft Entra ID** para garantir que apenas as pessoas certas tenham o acesso certo, no momento certo.
+> |"A Identidade é o novo perímetro de segurança."|
+> |Nesta seção, documento a implementação de controles no **Microsoft Entra ID** para garantir que apenas as pessoas certas tenham o acesso certo, no momento certo.|
 
 ---
 
-## 📚 Tópicos de Estudo (Foco AZ-500)
+## # 🔐 Azure Security Lab – Identity Protection & Access Control (AZ-500)
 
-| Recurso | O que é? | Objetivo de Segurança |
-| :--- | :--- | :--- |
-| **MFA** | Multi-Factor Authentication | Adicionar uma camada extra de verificação além da senha.
-|🔐 Implementação de MFA no Azure (AZ-500)
+Este repositório demonstra a implementação de controles de segurança de identidade no Azure, alinhados com as melhores práticas da certificação **AZ-500 (Microsoft Azure Security Technologies)**.
 
-Este projeto demonstra a implementação de Multi-Factor Authentication (MFA) no ambiente Azure, seguindo as boas práticas recomendadas para a certificação AZ-500.
+O foco está na proteção de identidades e no controle de acesso utilizando:
 
-O MFA adiciona uma camada extra de segurança ao processo de autenticação, exigindo que o usuário forneça dois ou mais fatores de verificação antes de acessar recursos.
-
-🎯 Objetivos
-
-Reduzir riscos de comprometimento de credenciais
-Proteger identidades e acessos privilegiados
-Atender requisitos de segurança e compliance
-
-⚙️ Métodos de MFA suportados
-
-Microsoft Authenticator (push notification)
-Código via SMS
-Chamadas telefônicas
-Token OATH (hardware/software)
-
-🛠️ Implementação
-
-O MFA pode ser configurado de duas formas principais:
-
-1. Security Defaults
-Habilitação rápida para todos os usuários
-MFA obrigatório para contas administrativas
-Proteção básica recomendada para ambientes pequenos
-2. Conditional Access (Recomendado)
-
-Permite aplicar MFA com base em condições como:
-
-Localização (IP / país)
-Dispositivo (compliance)
-Aplicação acessada
-Risco de login (Identity Protection)
-
-Exemplo de política:
-
-Exigir MFA para acesso ao portal do Azure
-Exigir MFA para usuários com privilégios elevados
-Bloquear acesso de locais não confiáveis
-
-🔍 Boas práticas (AZ-500)
-
-Habilitar MFA para todas as contas administrativas
-Preferir Conditional Access ao invés de MFA por usuário
-Usar políticas baseadas em risco
-Integrar com Identity Protection
-Monitorar logs via Azure AD Sign-in logs
-
-| **Conditional Access** | Acesso Condicional | Aplicar políticas "se-então" (ex: Se o IP é estrangeiro, então bloqueie).
-|🔐 Conditional Access (Acesso Condicional)
-
-O Conditional Access no Azure é um mecanismo de segurança baseado em políticas que utiliza a lógica “se-então” (if-then) para controlar o acesso a recursos.
-
-👉 Ele permite aplicar controles de segurança dinâmicos com base no contexto do login.
-
-🧠 Como melhorar seu tópico (versão revisada)
-
-Você pode substituir pelo modelo abaixo 👇
-
-🔐 Conditional Access | Acesso Condicional
-
-O Conditional Access é uma funcionalidade do Azure AD (Microsoft Entra ID) que permite aplicar políticas de acesso baseadas em condições específicas, utilizando a lógica:
-
-Se (condição), então (ação de controle)
-
-🎯 Objetivo
-
-Garantir que apenas acessos seguros e confiáveis sejam permitidos, reduzindo riscos de comprometimento de identidade.
-
-⚙️ Exemplos de políticas (modelo AZ-500)
-
-Condição (IF)	Ação (THEN)
-Se o usuário estiver fora do Brasil	Bloquear acesso
-Se o login for de alto risco	Exigir MFA
-Se o dispositivo não for confiável	Bloquear ou exigir conformidade
-Se acessar o portal do Azure	Exigir MFA
-Se for conta administrativa	Exigir MFA sempre
-
-🔐 Componentes principais
-
-Usuários/Grupos → quem será afetado
-Cloud Apps → qual recurso será protegido
-Condições → localização, dispositivo, risco, etc
-Controles de acesso → permitir, bloquear, exigir MFA
-
-🛡️ Controles mais usados
-
-Exigir MFA
-Exigir dispositivo compatível (Intune)
-Bloquear acesso
-Exigir mudança de senha
-Aplicar políticas baseadas em risco
-
-🔍 Boas práticas (AZ-500)
-
-Sempre usar Conditional Access + MFA
-Evitar MFA por usuário (legado)
-Aplicar políticas para:
-Contas administrativas
-Acesso ao Azure Portal
-Bloquear países suspeitos (geo-blocking)
-Usar modo relatório (Report-only) antes de ativar
-Testar com grupo piloto
-
-🚨 Exemplo prático (nível prova)
-
-Política: Bloquear acessos internacionais
-
-Se: Localização ≠ Brasil
-Então: Bloquear acesso
-
-👉 Esse tipo de política é muito cobrado na AZ-500.
-
-💡 Dica estratégica pra prova
-
-Na dúvida entre opções:
-
-👉 Sempre escolha soluções que envolvam:
-
-Conditional Access
-MFA
-Identity Protection
-| **PIM (Entra ID Governance)** | Privileged Identity Management | Acesso "Just-in-Time" (ADM apenas por 4h, por exemplo). |
-| **Identity Protection** | Proteção de Identidade | Detecção automática de usuários de risco e credenciais vazadas. |
+* Multi-Factor Authentication (MFA)
+* Conditional Access
+* Privileged Identity Management (PIM)
+* Identity Protection
 
 ---
 
-## 🔍 Visão de Analista de SOC (Blue Team)
+## 🎯 Objetivo
 
-No meu dia a dia no **SOC**, utilizo esses conceitos para investigar incidentes e endurecer as defesas:
+Implementar um modelo de segurança baseado em:
 
-### 🚩 Cenários de Investigação
-- **Logins Improváveis:** Analisar o `SigninLogs` para identificar acessos de localizações geográficas atípicas.
-- **Escalação de Privilégio:** Monitorar logs de auditoria do **PIM** para garantir que ninguém ativou uma role de Global Admin sem justificativa.
-- **MFA Fatigue:** Investigar múltiplos pedidos de MFA negados, o que pode indicar um ataque de "fadiga de aprovação".
-
-### ✅ Checklist de Hardening (Identity)
-- [ ] Bloquear protocolos de autenticação legada (Legacy Auth).
-- [ ] Exigir dispositivos gerenciados (Compliance) para acesso a dados sensíveis.
-- [ ] Revisão periódica de usuários convidados (Guest Accounts).
-- [ ] Implementação de senhas banidas e proteção de bloqueio inteligente.
+* **Zero Trust**
+* **Menor privilégio**
+* **Acesso Just-in-Time**
+* **Detecção e resposta a riscos**
 
 ---
 
-## 🛠️ Laboratórios Práticos
-*Aqui vou listar as evidências (prints ou logs) das minhas configurações:*
-1. **Lab 01:** [Configuração de Política de Acesso Condicional para Bloqueio Geográfico]
-2. **Lab 02:** [Ativação de Role via PIM com aprovação de terceiros]
+## 🔐 1. Multi-Factor Authentication (MFA)
+
+O MFA adiciona uma camada extra de segurança exigindo dois ou mais fatores de autenticação:
+
+### ✔️ Fatores:
+
+* Algo que você sabe (senha)
+* Algo que você tem (celular/app)
+* Algo que você é (biometria)
+
+### 📌 Implementação:
+
+* Integrado ao Azure AD (Entra ID)
+* Aplicado via:
+
+  * Conditional Access (recomendado)
+  * Security Defaults
+
+### 🛡️ Benefícios:
+
+* Reduz risco de credenciais comprometidas
+* Protege acessos críticos
 
 ---
+
+## 🔐 2. Conditional Access (Acesso Condicional)
+
+Permite controlar o acesso com base em regras do tipo:
+
+> **Se (condição), então (ação)**
+
+### ⚙️ Exemplos:
+
+| Condição                  | Ação                   |
+| ------------------------- | ---------------------- |
+| Login fora do país        | Bloquear acesso        |
+| Login de alto risco       | Exigir MFA             |
+| Dispositivo não confiável | Bloquear ou restringir |
+| Acesso ao portal Azure    | Exigir MFA             |
+
+### 🧩 Componentes:
+
+* Usuários/Grupos
+* Aplicações
+* Condições (localização, risco, dispositivo)
+* Controles (permitir, bloquear, MFA)
+
+---
+
+## 🔐 3. Privileged Identity Management (PIM)
+
+Gerencia acessos privilegiados com o conceito de:
+
+> **Just-in-Time (JIT)** — acesso temporário sob demanda
+
+### ⚙️ Funcionamento:
+
+* Usuário fica como **Elegível**
+* Solicita ativação quando necessário
+* Pode exigir:
+
+  * MFA
+  * Justificativa
+  * Aprovação
+* Acesso expira automaticamente (ex: 4h)
+
+### 🛡️ Benefícios:
+
+* Elimina privilégios permanentes
+* Reduz superfície de ataque
+* Garante auditoria completa
+
+---
+
+## 🔐 4. Identity Protection
+
+Detecta automaticamente riscos de identidade usando inteligência da Microsoft.
+
+### 🚨 Tipos de risco:
+
+#### 👤 User Risk
+
+* Conta potencialmente comprometida
+* Credenciais vazadas
+
+#### 🔐 Sign-in Risk
+
+* Login suspeito
+* Impossible travel
+* IP malicioso
+
+### ⚙️ Ações automáticas:
+
+| Condição             | Ação            |
+| -------------------- | --------------- |
+| Risco de login alto  | Exigir MFA      |
+| Usuário comprometido | Reset de senha  |
+| Risco crítico        | Bloquear acesso |
+
+---
+
+## 🔗 Integração entre os serviços
+
+Esses recursos trabalham juntos:
+
+* **Conditional Access** aplica políticas
+* **MFA** valida identidade
+* **PIM** controla privilégios
+* **Identity Protection** detecta riscos
+
+---
+
+## 🔍 Boas práticas (AZ-500)
+
+* Usar **Conditional Access + MFA**
+* Habilitar políticas baseadas em risco
+* Implementar **PIM para roles administrativas**
+* Evitar permissões permanentes
+* Monitorar logs de autenticação
+* Testar políticas com grupo piloto
+
+---
+
+## 🚨 Cenários comuns de prova
+
+* ✔️ Exigir MFA → Conditional Access
+* ✔️ Reduzir privilégios → PIM
+* ✔️ Detectar login suspeito → Identity Protection
+* ✔️ Bloquear acesso por localização → Conditional Access
+
+---
+
+## 📊 Fluxo de segurança implementado
+
+1. Usuário tenta login
+2. Identity Protection avalia risco
+3. Conditional Access aplica política
+4. MFA pode ser exigido
+5. Se necessário, acesso privilegiado via PIM (temporário)
+
+---
+
+## 🚀 Conclusão
+
+A combinação de **MFA + Conditional Access + PIM + Identity Protection** implementa um modelo robusto de segurança baseado em identidade, alinhado com o princípio de **Zero Trust** e com os requisitos da certificação AZ-500.
+
+---
+
+## 📁 Próximos passos
+
+* Adicionar prints das configurações
+* Criar diagramas de fluxo
+* Simular ataques e respostas
+* Monitorar logs no Azure
+
+---
+
+
 *Atualizado em: Abril/2026 - Foco em AZ-500 & Operações de SOC.*
